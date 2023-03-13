@@ -71,16 +71,61 @@ class Rect {
     return { x: this.x, y: this.y };
   }
 
+  get speed() {
+    return this.s;
+  }
+
   draw() {
     ctx.fillStyle = this.c;
     ctx.fillRect(this.x, this.y, this.w, this.h);
   }
 
   mov() {
-    if (movementKeys.a.pressed) this.x += -this.s;
-    else if (movementKeys.d.pressed) this.x += this.s;
-    else if (movementKeys.s.pressed) this.y += this.s;
-    else if (movementKeys.w.pressed) this.y += -this.s;
+    if (movementKeys.a.pressed) {
+      this.collision("right");
+    } else if (movementKeys.d.pressed) {
+      this.collision("left");
+    } else if (movementKeys.s.pressed) {
+      this.collision("down");
+    } else if (movementKeys.w.pressed) {
+      this.collision("up");
+    }
+  }
+
+  collision(direction) {
+    const boundaries = map._m;
+    for (let i = 0; i < boundaries.length; i++) {
+      for (let j = 0; j < boundaries[i].length; j++) {
+        if (boundaries[i][j] instanceof Rect) {
+          const obj = boundaries[i][j];
+
+          if (
+            direction === "up" &&
+            !(this.pos.y + this.speed <= obj.pos.y + size + 10)
+          ) {
+            this.y += -this.s;
+            break;
+          }
+          // if (direction === 'left' &&!(this.pos.x + this.speed <= obj.pos.x + size + 10)) {
+          //   this.x += this.s;
+          //   break;
+          // }
+          if (
+            direction === "down" &&
+            !(this.pos.y + size + this.speed >= obj.pos.y + 5)
+          ) {
+            this.y += this.s;
+            break;
+          }
+          // if (direction === 'right' &&!(this.pos.x + size + this.speed <= obj.pos.x + 10)) {
+          //   this.x += -this.s;
+          //   break;
+          // }
+
+          break;
+        }
+      }
+    }
   }
 }
 
@@ -113,10 +158,8 @@ class Overworld {
   create() {
     for (let i = 0; i < this.rows; i++) {
       for (let j = 0; j < this.cols; j++) {
-        const hasRect = Math.floor(Math.random() * 2);
-        if (hasRect)
+        if (i === 0 || j === 0 || i === this.rows - 1 || j === this.cols - 1)
           this.mapping[i][j] = new Rect(j * size, i * size, size, size, "blue");
-        else this.mapping[i][j] = 0;
       }
     }
   }
@@ -130,30 +173,6 @@ class Overworld {
       });
     });
   }
-
-  collision(object1) {
-    this.mapping.forEach(row => {
-      row.forEach(obj => {
-        if (obj instanceof Rect) {
-          const isCollinding =
-            (object1.pos.x + size >= obj.pos.x) &&
-            (object1.pos.x <= obj.pos.x + size) &&
-            (object1.pos.y + size >= obj.pos.y) &&
-            (object1.pos.y <= obj.pos.y + size)
-          if (isCollinding) console.log('collinding')
-        }
-      })
-    })
-  }
-}
-
-function collision(object1, object2) {
-  return (
-    object1.pos.x + size >= object2.pos.x &&
-    object1.pos.x <= object2.pos.x + size &&
-    object1.pos.y + size >= object2.pos.y &&
-    object1.pos.y <= object2.pos.y + size
-  );
 }
 
 const pos = { x: 1 * 64, y: 1 * 64 };
@@ -167,7 +186,6 @@ function step() {
   map.draw();
   grid.draw();
 
-  map.collision(r1);
   r1.mov();
 
   r1.draw();
