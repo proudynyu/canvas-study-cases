@@ -8,6 +8,11 @@ const size = 64;
 canvas.width = size * gridCols;
 canvas.height = size * gridRows;
 
+const mouse = {
+  x: 0,
+  y: 0
+}
+
 const movementKeys = {
   w: {
     pressed: false,
@@ -57,6 +62,28 @@ window.addEventListener("keyup", (e) => {
   }
 });
 
+window.addEventListener('mousemove', (e) => {
+  mouse.x = e.clientX;
+  mouse.y = e.clientY;
+})
+
+class Circle {
+  constructor(x, y, radius, color) {
+    this.x = x;
+    this.y = y;
+    this.radius = radius;
+    this.color = color;
+  }
+
+  draw() {
+    ctx.beginPath();
+    ctx.arc(this.x, this.y, this.radius, 0, Math.PI * 2, false);
+    ctx.fillStyle = this.color;
+    ctx.fill();
+    ctx.closePath();
+  }
+}
+
 class Rect {
   constructor(x, y, w, h, c = "white", s = 10) {
     this.x = x;
@@ -75,6 +102,14 @@ class Rect {
     return this.s;
   }
 
+  get width() {
+    return this.w
+  }
+
+  get height() {
+    return this.h
+  }
+
   draw() {
     ctx.fillStyle = this.c;
     ctx.fillRect(this.x, this.y, this.w, this.h);
@@ -82,125 +117,59 @@ class Rect {
 
   mov() {
     if (movementKeys.a.pressed) {
-      this.collision("right");
+      this.x += -this.s;
     } else if (movementKeys.d.pressed) {
-      this.collision("left");
+      this.x += this.s;
+
     } else if (movementKeys.s.pressed) {
-      this.collision("down");
+      this.y += this.s;
+
     } else if (movementKeys.w.pressed) {
-      this.collision("up");
-    }
-  }
-
-  collision(direction) {
-    const boundaries = map._m;
-    for (let i = 0; i < boundaries.length; i++) {
-      for (let j = 0; j < boundaries[i].length; j++) {
-        if (boundaries[i][j] instanceof Rect) {
-          const obj = boundaries[i][j];
-
-          if (
-            direction === "up" &&
-            !(this.pos.y + this.speed <= obj.pos.y + size + 10)
-          ) {
-            this.y += -this.s;
-            break;
-          }
-          // if (direction === 'left' &&!(this.pos.x + this.speed <= obj.pos.x + size + 10)) {
-          //   this.x += this.s;
-          //   break;
-          // }
-          if (
-            direction === "down" &&
-            !(this.pos.y + size + this.speed >= obj.pos.y + 5)
-          ) {
-            this.y += this.s;
-            break;
-          }
-          // if (direction === 'right' &&!(this.pos.x + size + this.speed <= obj.pos.x + 10)) {
-          //   this.x += -this.s;
-          //   break;
-          // }
-
-          break;
-        }
-      }
+      this.y += -this.s;
     }
   }
 }
 
-class Grid {
-  constructor(size) {
-    this.size = size;
-  }
-
-  draw() {
-    for (let i = 0; i < canvas.width; i += this.size) {
-      for (let j = 0; j < canvas.width; j += this.size) {
-        ctx.strokeStyle = "#000";
-        ctx.strokeRect(i, j, this.size, this.size);
-      }
-    }
-  }
-}
-
-class Overworld {
-  constructor(cols, rows) {
-    this.cols = cols;
-    this.rows = rows;
-    this.mapping = [...Array(rows)].map(() => Array(cols));
-  }
-
-  get _m() {
-    return this.mapping;
-  }
-
-  create() {
-    for (let i = 0; i < this.rows; i++) {
-      for (let j = 0; j < this.cols; j++) {
-        if (i === 0 || j === 0 || i === this.rows - 1 || j === this.cols - 1)
-          this.mapping[i][j] = new Rect(j * size, i * size, size, size, "blue");
-      }
-    }
-  }
-
-  draw() {
-    this.mapping.forEach((row) => {
-      row.forEach((col) => {
-        if (col instanceof Rect) {
-          col.draw();
-        }
-      });
-    });
-  }
-}
-
-const pos = { x: 1 * 64, y: 1 * 64 };
+const pos = { x: gridCols / 2 * 64, y: gridRows / 2 * 64 };
 const r1 = new Rect(pos.x, pos.y, size, size, "black", 8);
+const c1 = new Circle(300, 300, 100, 'black');
+const c2 = new Circle(undefined, undefined, 30, 'red');
 
-const grid = new Grid(size);
-const map = new Overworld(gridCols, gridRows);
+function circleCollision(c1, c2) {
+  const radiusSum = c1.radius + c2.radius
+  const d = Math.sqrt(Math.pow(c2.x - c1.x, 2) + Math.pow(c2.y - c1.y, 2))
 
-function step() {
+  return d < radiusSum
+}
+
+function circleCollisionStep() {
   ctx.clearRect(0, 0, canvas.width, canvas.height);
-  map.draw();
-  grid.draw();
 
+  c1.draw();
+  c2.x = mouse.x - canvas.width / 2 / 2;
+  c2.y = mouse.y - canvas.height / 2 / 2;
+
+  if (circleCollision(c1, c2)) {
+    c1.color = 'rgb(0,0,0,0.5)'
+    c2.color = 'rgb(255, 0, 0, 0.5)'
+  } else {
+    c1.color = 'rgb(0,0,0,1)'
+    c2.color = 'rgb(255, 0, 0, 1)'
+  }
+  c2.draw();
+  requestAnimationFrame(() => circleCollisionStep());
+}
+
+function rectCollisionStep() {
   r1.mov();
 
   r1.draw();
 
-  requestAnimationFrame(() => step());
+  requestAnimationFrame(() => rectCollisionStep());
 }
 
 function main() {
-  map.create();
-  map.draw();
-  grid.draw();
-
-  r1.draw();
-
-  step();
+  circleCollisionStep();
 }
 
 main();
