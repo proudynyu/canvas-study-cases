@@ -132,8 +132,14 @@ class Rect {
 
 const pos = { x: gridCols / 2 * 64, y: gridRows / 2 * 64 };
 const r1 = new Rect(pos.x, pos.y, size, size, "black", 8);
-const c1 = new Circle(300, 300, 100, 'black');
+
 const c2 = new Circle(undefined, undefined, 30, 'red');
+
+const circles = [
+  new Circle(300, 300, 100, 'black'), 
+  new Circle(600, 300, 30, 'black'), 
+  new Circle(100, 100, 20, 'black')
+]
 
 function circleCollision(c1, c2) {
   const radiusSum = c1.radius + c2.radius
@@ -145,17 +151,24 @@ function circleCollision(c1, c2) {
 function circleCollisionStep() {
   ctx.clearRect(0, 0, canvas.width, canvas.height);
 
-  c1.draw();
   c2.x = mouse.x - canvas.width / 2 / 2;
   c2.y = mouse.y - canvas.height / 2 / 2;
 
-  if (circleCollision(c1, c2)) {
-    c1.color = 'rgb(0,0,0,0.5)'
-    c2.color = 'rgb(255, 0, 0, 0.5)'
-  } else {
-    c1.color = 'rgb(0,0,0,1)'
-    c2.color = 'rgb(255, 0, 0, 1)'
+  for (let circle of circles) {
+    circle.draw()
   }
+
+  for (let circle of circles) {
+    if (circleCollision(circle, c2)) {
+      circle.color = 'rgb(0,0,0,0.5)'
+      c2.color = 'rgb(255, 0, 0, 0.5)'
+      break
+    } else {
+      circle.color = 'rgb(0,0,0,1)'
+      c2.color = 'rgb(255, 0, 0, 1)'
+    }
+  }
+
   c2.draw();
   requestAnimationFrame(() => circleCollisionStep());
 }
