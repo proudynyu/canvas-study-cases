@@ -92,6 +92,7 @@ class Rect {
     this.h = h;
     this.c = c;
     this.s = s;
+    this.og = c;
   }
 
   get pos() {
@@ -130,15 +131,22 @@ class Rect {
   }
 }
 
-const pos = { x: gridCols / 2 * 64, y: gridRows / 2 * 64 };
-const r1 = new Rect(pos.x, pos.y, size, size, "black", 8);
+const r1 = new Rect(64, 64, size, size, "black", 8);
 
 const c2 = new Circle(undefined, undefined, 30, 'red');
 
 const circles = [
-  new Circle(300, 300, 100, 'black'), 
-  new Circle(600, 300, 30, 'black'), 
+  new Circle(300, 300, 100, 'black'),
+  new Circle(600, 300, 30, 'black'),
   new Circle(100, 100, 20, 'black')
+]
+
+const rectangles = [
+  new Rect(gridCols * 64 / 2, gridRows * 64 / 2, size, size, "red"),
+  new Rect(gridCols * 64 / 3, gridRows * 64 / 2, size, size, "red"),
+  new Rect(gridCols * 64 / 4, gridRows * 64 / 2, size, size, "red"),
+  new Rect(gridCols * 64 / 6, gridRows * 64 / 2, size, size, "red"),
+  new Rect(gridCols * 64 / 12, gridRows * 64 / 2, size, size, "red"),
 ]
 
 function circleCollision(c1, c2) {
@@ -173,8 +181,32 @@ function circleCollisionStep() {
   requestAnimationFrame(() => circleCollisionStep());
 }
 
+function rectCollision(r1, r2) {
+  return r1.x <= r2.x + r2.w &&
+    r1.x + r1.w >= r2.x &&
+    r1.y <= r2.y + r2.w &&
+    r1.y + r1.w >= r2.y
+
+}
+
 function rectCollisionStep() {
+  ctx.clearRect(0, 0, canvas.width, canvas.height);
   r1.mov();
+
+  for (let rec of rectangles) {
+    rec.draw();
+  }
+
+  for (let rec of rectangles) {
+    if (rectCollision(r1, rec)) {
+      r1.c = 'rgb(0,0,0,0.5)'
+      rec.c = 'rgb(255,0,0,0.5)'
+    }
+    else {
+      r1.c = r1.og
+      rec.c = rec.og
+    }
+  }
 
   r1.draw();
 
@@ -182,7 +214,7 @@ function rectCollisionStep() {
 }
 
 function main() {
-  circleCollisionStep();
+  rectCollisionStep();
 }
 
 main();
