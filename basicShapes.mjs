@@ -1,4 +1,4 @@
-import { movementKeys } from './constants.mjs'
+import { movementKeys } from './movement.mjs'
 
 export class Circle {
   constructor(x, y, radius, color) {

@@ -1,5 +1,5 @@
-import { Circle, Rect } from './classes.mjs'
-import { mouse, movementKeys } from './constants.mjs'
+import { Circle, Rect } from '../basicShapes.mjs'
+import { mouse, movementKeys } from '../movement.mjs'
 
 const canvas = document.querySelector("canvas");
 const ctx = canvas.getContext("2d");
