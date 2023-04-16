@@ -1,4 +1,4 @@
-import { Vector } from '../vector.mjs'
+import { Vector } from './vector.mjs'
 
 const canvas = document.querySelector('canvas')
 const ctx = canvas.getContext('2d')
