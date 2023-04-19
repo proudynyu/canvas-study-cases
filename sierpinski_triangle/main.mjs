@@ -3,6 +3,9 @@ import { Vector } from './vector.mjs'
 const canvas = document.querySelector('canvas')
 const ctx = canvas.getContext('2d')
 
+canvas.width = 600;
+canvas.height = 800;
+
 const p1 = {
   x: (canvas.width / 2 / 2),
   y: (canvas.height / 2 + canvas.height / 2 / 2)
