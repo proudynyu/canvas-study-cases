@@ -4,8 +4,7 @@ const ctx = canvas.getContext('2d')
 canvas.width = 800;
 canvas.height = 600;
 
-ctx.fillStyle = "#000"
-ctx.fillRect(canvas.width / 2, canvas.height / 2, 10, 10)
+const SIZE = 10
 
 class Vector {
   magnitude;
@@ -18,5 +17,15 @@ class Vector {
     this.y = y;
     this.magnitude = magnitude;
     this.direction = direction;
+  }
+}
+
+ctx.fillStyle = "#000"
+for (let i = 0; i < canvas.width; i+=SIZE) {
+  for (let j = 0; j < canvas.height; j+=SIZE) {
+    ctx.beginPath()
+    ctx.arc(i, j, 1, 0, 2*Math.PI)
+    ctx.fill()
+    ctx.closePath()
   }
 }
