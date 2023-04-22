@@ -1,4 +1,6 @@
 import { Vector } from './vector.mjs'
+import { Circle } from './circle.mjs'
+
 
 const canvas = document.querySelector('canvas')
 const ctx = canvas.getContext('2d')
@@ -16,6 +18,8 @@ for (let i = 0; i < canvas.width; i+=SIZE) {
   }
 }
 
+const circle = new Circle(ctx)
+
 for (const vec of vectorPoints) {
   ctx.fillStyle = "red"
   
@@ -31,5 +35,13 @@ for (const vec of vectorPoints) {
   vec.draw()
 }
 
-ctx.save()
+ctx.save();
 
+ctx.fillStyle = "#fff";
+function update() {
+  circle.update()
+
+  requestAnimationFrame(update)
+}
+
+update()

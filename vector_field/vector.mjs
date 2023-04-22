@@ -1,5 +1,4 @@
 export class Vector {
-  magnitude;
   direction;
   x;
   y;
@@ -34,6 +33,10 @@ export class Vector {
     this.x *= scalar;
     this.y *= scalar;
     return this;
+  }
+
+  mag() {
+    return Math.sqrt( Math.pow(this.x, 2) + Math.pow(this.y, 2) )
   }
 
   distance(vector) {
