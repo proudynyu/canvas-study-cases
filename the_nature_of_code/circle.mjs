@@ -3,12 +3,14 @@ import { Vector } from './vector.mjs'
 export class Circle {
   position;
   velocity;
+  acceleration;
   ctx;
 
-  constructor(ctx) {
+  constructor(ctx, x, y) {
     this.ctx = ctx;
-    this.position = new Vector(32, 32);
+    this.position = new Vector(x, y);
     this.velocity = new Vector(0,0);
+    this.acceleration = new Vector(0,0);
   }
 
   update() {

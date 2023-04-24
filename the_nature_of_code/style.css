@@ -12,3 +12,7 @@ body {
   justify-content: center;
   background: black;
 }
+
+.root {
+  border: 1px solid white;
+}

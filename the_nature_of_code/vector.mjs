@@ -29,6 +29,12 @@ export class Vector {
     this.ctx.closePath()
   }
 
+  div(scalar) {
+    this.x /= scalar;
+    this.y /= scalar;
+    return this;
+  }
+
   mult(scalar) {
     this.x *= scalar;
     this.y *= scalar;
@@ -44,5 +50,22 @@ export class Vector {
       Math.pow(vector.x - this.x, 2) +
       Math.pow(vector.y - this.y, 2)
     )
+  }
+
+  normalize() {
+    const mag = this.mag();
+
+    if (mag !== 0 && mag !== 1) {
+      this.div(mag);
+    }
+    return this;
+  }
+
+  limit(scalar) {
+    if (this.mag() > scalar) {
+      this.normalize();
+      this.mult(scalar);
+    }
+    return this;
   }
 }
