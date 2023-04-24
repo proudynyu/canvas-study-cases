@@ -13,7 +13,6 @@ const circle = new Circle(ctx, ORIGIN.x, ORIGIN.y)
 
 ctx.fillStyle = "#fff";
 circle.velocity.mult(4);
-circle.velocity.limit(2);
 
 function randomNumber(min, max) {
   return Math.floor(Math.random() * (max - min)) + min
@@ -32,6 +31,7 @@ function update() {
     circle.velocity.y *= -1;
 
   circle.position.add(circle.velocity);
+  circle.velocity.limit(2);
 
   circle.update()
 
