@@ -17,10 +17,7 @@ window.addEventListener("mousemove", (event) => {
 })
 
 const ORIGIN = new Vector(canvas.width / 2, canvas.height / 2);
-
 const circle = new Circle(ctx, ORIGIN.x, ORIGIN.y, canvas);
-
-ctx.fillStyle = "#fff";
 
 function update() {
     ctx.clearRect(0, 0, canvas.width, canvas.height);
@@ -32,10 +29,8 @@ function update() {
         .div(5);
 
     circle.acceleration = mouse;
-    circle.velocity.add(circle.acceleration);
-    circle.position.add(circle.velocity);
-    circle.velocity.limit(5);
     circle.update()
+    circle.draw()
 
     requestAnimationFrame(update)
 }
