@@ -18,9 +18,9 @@ export class Circle {
     }
 
     update() {
+        this.velocity.limit(5);
         this.velocity.add(this.acceleration);
         this.position.add(this.velocity);
-        this.velocity.limit(5);
     }
 
     draw() {
@@ -32,12 +32,15 @@ export class Circle {
     }
 
     edges() {
-        if (this.position.x >= this.canvas.width || this.position.x <= 0) {
+        if (this.position.x >= this.canvas.width || this.position.x < 0) {
             this.velocity.x *= -1;
         }
 
         if (this.position.y >= this.canvas.height || this.position.y <= 0) {
             this.velocity.y *= -1;
         }
+    }
+
+    addForce(force) {
     }
 }

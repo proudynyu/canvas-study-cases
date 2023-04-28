@@ -24,18 +24,15 @@ const circle = new Circle(ctx, canvas, ORIGIN.x, ORIGIN.y);
 
 function update() {
     ctx.clearRect(0, 0, canvas.width, canvas.height);
-    const mouse = new Vector(mousePosition.x, mousePosition.y);
 
-    mouse
-        .sub(circle.position)
-        .normalize()
-        .div(5);
+    const f = new Vector(-0.1,0);
+    circle.acceleration = f
 
-    circle.acceleration = mouse;
-    circle.update()
-    circle.draw()
+    circle.update();
+    circle.edges();
+    circle.draw();
 
-    requestAnimationFrame(update)
+    requestAnimationFrame(update);
 }
 
 window.addEventListener("DOMContentLoaded", update());
