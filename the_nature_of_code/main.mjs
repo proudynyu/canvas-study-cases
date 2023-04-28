@@ -1,6 +1,9 @@
 import { Vector } from './vector.mjs'
 import { Circle } from './circle.mjs'
 
+// import { Screen } from './canvas.mjs'
+// const canvas = new Screen(800, 600, 'root', 'main')
+
 const canvas = document.querySelector('canvas')
 const ctx = canvas.getContext('2d')
 
@@ -17,7 +20,7 @@ window.addEventListener("mousemove", (event) => {
 })
 
 const ORIGIN = new Vector(canvas.width / 2, canvas.height / 2);
-const circle = new Circle(ctx, ORIGIN.x, ORIGIN.y, canvas);
+const circle = new Circle(ctx, canvas, ORIGIN.x, ORIGIN.y);
 
 function update() {
     ctx.clearRect(0, 0, canvas.width, canvas.height);
@@ -35,4 +38,4 @@ function update() {
     requestAnimationFrame(update)
 }
 
-update()
+window.addEventListener("DOMContentLoaded", update());

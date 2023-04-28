@@ -8,7 +8,7 @@ export class Circle {
     color;
     canvas;
 
-    constructor(ctx, x, y, canvas, color) {
+    constructor(ctx, canvas, x, y, color) {
         this.ctx = ctx;
         this.position = new Vector(x, y);
         this.velocity = new Vector(0,0);

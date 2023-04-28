@@ -3,6 +3,8 @@ export class Screen {
     height;
     canvasId;
     name;
+    canvas;
+    ctx;
 
     static screens = []
 
@@ -26,7 +28,7 @@ export class Screen {
         canvas.width = this.width;
         canvas.height = this.height;
 
-        window.ctx = ctx;
-
+        this.ctx = ctx;
+        this.canvas = canvas;
     }
 }
